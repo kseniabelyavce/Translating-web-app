@@ -1,8 +1,5 @@
-const translations = {
-    "Andrei Vorobei": "Андрей Воробей"
-}
-
-const http = require("http");
+import TranslateLib from "./TranslateLib.js";
+import * as http from "http";
 
 http.createServer(async (request, response) => {
     response.setHeader("Content-Type", "application/json");
@@ -18,8 +15,8 @@ http.createServer(async (request, response) => {
         case "/translate":
             const {phrase} = body
 
-            const translationPhrase = {ru: translations[phrase] || phrase};
-            sendResponse(response, translationPhrase);
+            const result = TranslateLib.getTranslation(phrase);
+            sendResponse(response, result);
     }
 }).listen(8000, 'localhost', () => {
     console.log(`Server is running on http://localhost:8000`);
