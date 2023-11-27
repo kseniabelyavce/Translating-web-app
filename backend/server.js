@@ -15,7 +15,7 @@ http.createServer(async (request, response) => {
         case "/translate":
             const {phrase} = body
 
-            const result = TranslateLib.getTranslation(phrase);
+            const result = await TranslateLib.getTranslation(phrase);
             sendResponse(response, result);
     }
 }).listen(8000, 'localhost', () => {
