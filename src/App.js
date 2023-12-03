@@ -1,4 +1,4 @@
-import T from "./translationLib";
+import T from "./translationLib.js";
 
 
 export default function App () {

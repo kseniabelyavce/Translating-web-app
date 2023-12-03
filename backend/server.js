@@ -11,12 +11,18 @@ http.createServer(async (request, response) => {
     }
 
     const body = await readFullBody(request);
+    let result
     switch (request.url) {
         case "/translate":
             const {phrase} = body
-
-            const result = await TranslateLib.getTranslation(phrase);
+            result = await TranslateLib.getTranslation(phrase);
             sendResponse(response, result);
+            break;
+        case "/all_translations":
+            result = await TranslateLib.getAllTranslations();
+            sendResponse(response, result);
+            break;
+
     }
 }).listen(8000, 'localhost', () => {
     console.log(`Server is running on http://localhost:8000`);

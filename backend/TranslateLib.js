@@ -17,6 +17,20 @@ export default class TranslateLib {
             return acc;
         }, {});
     }
+
+    static async getAllTranslations() {
+        const data = await knexConnection.select().from('translations');
+        return data.reduce((acc, curr) => {
+            const phrase = curr.phrase;
+            const locale = languages[curr.language];
+            const translation = curr.translation;
+            acc[phrase] = {
+            ...(acc[phrase] && acc[phrase]),
+             [locale]: translation
+            }
+            return acc;
+        }, {})
+    }
 }
 
 
