@@ -31,6 +31,27 @@ export default class TranslateLib {
             return acc;
         }, {})
     }
+
+    static async createPhrase(phrase){
+        const result = await knexConnection.select().where('phrase', '=', phrase).from('translations');
+        console.log(result)
+        if (!result.length) {
+            await knexConnection.insert({phrase}).into('translations')
+        }
+    }
+
+    static async updatePhrase(phrase, language, translation) {
+        console.log(language, translation)
+        return knexConnection.where('phrase', '=', phrase).update({language, translation}).from('translations');
+    }
+
+    static deletePhrase(phrase) {
+        return knexConnection.delete().where('phrase', '=', phrase).from('translations').del();
+    }
+
+    static getAllLanguages()  {
+        return Object.values(languages);
+    }
 }
 
 

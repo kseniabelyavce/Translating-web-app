@@ -22,7 +22,22 @@ http.createServer(async (request, response) => {
             result = await TranslateLib.getAllTranslations();
             sendResponse(response, result);
             break;
-
+        case "/admin/create_phrase":
+            await TranslateLib.createPhrase(body.phrase)
+            sendResponse(response,'OK');
+            break;
+        case "/admin/update_phrase":
+            await TranslateLib.updatePhrase(body.phrase, body.language, body.translation)
+            sendResponse(response,'OK');
+            break;
+        case "/admin/delete_phrase":
+            await TranslateLib.deletePhrase(body.phrase);
+            sendResponse(response,'OK');
+            break;
+        case "/all_languages":
+            result = await TranslateLib.getAllLanguages();
+            sendResponse(response, result);
+            break;
     }
 }).listen(8000, 'localhost', () => {
     console.log(`Server is running on http://localhost:8000`);
