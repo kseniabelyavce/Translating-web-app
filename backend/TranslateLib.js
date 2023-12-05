@@ -1,9 +1,6 @@
 import knexConnection from "./database.js";
 
-const languages = {
-    1: 'en',
-    2: 'ru'
-}
+const languages = ['en', 'ru'];
 
 export default class TranslateLib {
     static translations = {
@@ -13,7 +10,7 @@ export default class TranslateLib {
     static async getTranslation(phrase) {
         let resultDB = await knexConnection.select().from('translations');
         return resultDB.reduce((acc, curr) => {
-            acc[languages[curr.language]] = curr.translation || curr.phrase;
+            acc[curr.language] = curr.translation || curr.phrase;
             return acc;
         }, {});
     }
@@ -22,7 +19,7 @@ export default class TranslateLib {
         const data = await knexConnection.select().from('translations');
         return data.reduce((acc, curr) => {
             const phrase = curr.phrase;
-            const locale = languages[curr.language];
+            const locale = curr.language;
             const translation = curr.translation;
             acc[phrase] = {
             ...(acc[phrase] && acc[phrase]),
@@ -40,17 +37,21 @@ export default class TranslateLib {
         }
     }
 
-    static async updatePhrase(phrase, language, translation) {
-        console.log(language, translation)
-        return knexConnection.where('phrase', '=', phrase).update({language, translation}).from('translations');
+    static async updatePhrase(phrase, langTranslations) {
+        Object.keys(langTranslations).map(async (language) => {
+            await knexConnection
+                .from('translations')
+                .where({phrase, language})
+                .update({translation: langTranslations[language]})
+        });
     }
 
     static deletePhrase(phrase) {
-        return knexConnection.delete().where('phrase', '=', phrase).from('translations').del();
+        return knexConnection.where('phrase', '=', phrase).from('translations').del();
     }
 
     static getAllLanguages()  {
-        return Object.values(languages);
+        return languages;
     }
 }
 

@@ -27,7 +27,7 @@ http.createServer(async (request, response) => {
             sendResponse(response,'OK');
             break;
         case "/admin/update_phrase":
-            await TranslateLib.updatePhrase(body.phrase, body.language, body.translation)
+            await TranslateLib.updatePhrase(body.phrase, body.langTranslations)
             sendResponse(response,'OK');
             break;
         case "/admin/delete_phrase":

@@ -4,6 +4,8 @@ import {useEffect, useState} from "react";
 export default function AdminMain() {
     const [translations, setTranslations] = useState([])
     const [languages, setLanguages] = useState([])
+    const updatedPhrases = {};
+    // const history = useHistory();
 
     useEffect(() => {
 
@@ -31,7 +33,17 @@ export default function AdminMain() {
 
     }, [])
 
-    console.log(translations, languages)
+    function saveTranslation(phrase) {
+       fetch('http://localhost:8000/admin/update_phrase', {
+           method: "POST",
+           body: JSON.stringify({phrase: phrase, langTranslations: updatedPhrases[phrase]})})
+    }
+
+    function deleteTranslation(phrase) {
+        fetch('http://localhost:8000/admin/delete_phrase', {
+            method: "POST",
+            body: JSON.stringify({phrase: phrase})})
+    }
 
     return Object.keys(translations).length ? (
         <table>
@@ -51,8 +63,19 @@ export default function AdminMain() {
                     <tr>
                         <td>{row.phrase}</td>
                         {languages.map(locale => {
-                            return (<td>{row?.[locale]}</td>)
+                            return (
+                                <td>
+                                    <input id={row.phrase} defaultValue={row?.[locale]} onChange={(event) => {
+                                        if (!updatedPhrases[row.phrase]) {
+                                            updatedPhrases[row.phrase] = {};
+                                        }
+                                        updatedPhrases[row.phrase][locale] = event.target.value;
+                                    }}
+                                    />
+                                </td>)
                         })}
+                        <td><button onClick={() => saveTranslation(row.phrase)}>Save</button></td>
+                        <td><button onClick={() => deleteTranslation(row.phrase)}>Delete</button></td>
                     </tr>)
             })}
             </tbody>
