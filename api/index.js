@@ -13,13 +13,17 @@ http.createServer(async (request, response) => {
     const body = await readFullBody(request);
     let result
     switch (request.url) {
-        case "/translate":
+        case "/public/translate":
             const {phrase} = body
             result = await TranslateLib.getTranslation(phrase);
             sendResponse(response, result);
             break;
-        case "/all_translations":
+        case "/public/all_translations":
             result = await TranslateLib.getAllTranslations();
+            sendResponse(response, result);
+            break;
+        case "/public/all_languages":
+            result = await TranslateLib.getAllLanguages();
             sendResponse(response, result);
             break;
         case "/admin/create_phrase":
@@ -34,9 +38,8 @@ http.createServer(async (request, response) => {
             await TranslateLib.deletePhrase(body.phrase);
             sendResponse(response,'OK');
             break;
-        case "/all_languages":
-            result = await TranslateLib.getAllLanguages();
-            sendResponse(response, result);
+        default:
+            sendResponse(response, 'Not found', 404);
             break;
     }
 }).listen(8000, 'localhost', () => {

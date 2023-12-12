@@ -3,12 +3,8 @@ import knexConnection from "./database.js";
 const languages = ['en', 'ru'];
 
 export default class TranslateLib {
-    static translations = {
-        "Andrei Vorobei": "Андрей Воробей"
-    }
-
     static async getTranslation(phrase) {
-        let resultDB = await knexConnection.select().from('translations');
+        let resultDB = await knexConnection.select().where('phrase', '=', phrase).from('translations');
         return resultDB.reduce((acc, curr) => {
             acc[curr.language] = curr.translation || curr.phrase;
             return acc;
@@ -31,7 +27,6 @@ export default class TranslateLib {
 
     static async createPhrase(phrase){
         const result = await knexConnection.select().where('phrase', '=', phrase).from('translations');
-        console.log(result)
         if (!result.length) {
             await knexConnection.insert({phrase}).into('translations')
         }
