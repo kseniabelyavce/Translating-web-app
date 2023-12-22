@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 
 export default function T({children}) {
     const [translated, setTranslated] = useState(children)
-    const userLocale = 'ru';
+    const userLocale = 'de';
 
     useEffect( () => {
             (async () => {

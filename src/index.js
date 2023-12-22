@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import App from './PublicApp/App.js';
 import AdminMain from "./AdminPanel/AdminMain.js";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {
     Route,
     Routes,
