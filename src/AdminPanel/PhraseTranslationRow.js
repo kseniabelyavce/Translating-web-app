@@ -11,7 +11,6 @@ export default function PhraseTranslationRow({language, translation, phrase}) {
         if (isEditMode) {
             revertChanges()
         }
-
         setIsEditMode(!isEditMode);
     }
 
@@ -31,22 +30,27 @@ export default function PhraseTranslationRow({language, translation, phrase}) {
         }
     }
 
+    async function onDeleteTranslation() {
+        await fetch("http://localhost:8000/admin/delete_phrase",  {method: "POST", body: JSON.stringify({phrase, language})})
+        setOriginalTranslation(null);
+    }
 
-    return (
-        <tr>
-            <td>{language}</td>
-            <td>
-                {isEditMode ? (
-                    <textarea style={{width: "100%"}} defaultValue={editedTranslation} onChange={(event) => setEditedTranslation(event.target.value)}/>
-                ) : editedTranslation}
-            </td>
-            <td style={{display: "flex", justifyContent: "flex-start"}}>
-                <Button onClick={onEditPhrase} style={{width: "20%", marginRight: "10px"}} variant="dark">{
-                    isEditMode ? 'Reset' : 'Edit'
-                }</Button>
-                <Button onClick={onSaveTranslation} disabled={!isEditMode} style={{width: "20%", marginRight: "10px"}} variant="dark">Save</Button>
-                <Button style={{width: "20%", marginRight: "10px"}} variant="dark">Delete</Button>
-            </td>
-        </tr>
-    )
+    return originalTranslation ?
+        (
+            <tr>
+                <td>{language}</td>
+                <td>
+                    {isEditMode ? (
+                        <textarea style={{width: "100%"}} defaultValue={editedTranslation} onChange={(event) => setEditedTranslation(event.target.value)}/>
+                    ) : editedTranslation}
+                </td>
+                <td style={{display: "flex", justifyContent: "flex-start"}}>
+                    <Button onClick={onEditPhrase} style={{width: "20%", marginRight: "10px"}} variant="dark">{
+                        isEditMode ? 'Reset' : 'Edit'
+                    }</Button>
+                    <Button onClick={onSaveTranslation} disabled={!isEditMode} style={{width: "20%", marginRight: "10px"}} variant="dark">Save</Button>
+                    <Button onClick={onDeleteTranslation} style={{width: "20%", marginRight: "10px"}} variant="dark">Delete</Button>
+                </td>
+             </tr>
+        )  : null
 }

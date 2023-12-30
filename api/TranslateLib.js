@@ -3,7 +3,7 @@ import knexConnection from "./database.js";
 const languages = ['en', 'fr', 'de'];
 
 export default class TranslateLib {
-    static async getTranslation(phrase, locale) {
+    static async getTranslation(phrase) {
         let resultDB = await knexConnection.select().where({phrase: phrase, language: 'en'}).from('translations');
         if (resultDB && !resultDB.length) {
             await this.createPhrase(phrase);
@@ -30,7 +30,11 @@ export default class TranslateLib {
         }, {})
     }
 
-    static async createPhrase(phrase, locale){
+    static getAllLanguages()  {
+        return languages;
+    }
+
+    static async createPhrase(phrase){
         const result = await knexConnection.select().where({phrase: phrase, language: 'en'}).from('translations');
         if (!result.length) {
             await knexConnection.insert({phrase, language: 'en', translation: phrase}).into('translations')
@@ -44,17 +48,12 @@ export default class TranslateLib {
                 .update({translation});
     }
 
-    static deletePhrase(phrase) {
-        return knexConnection.where('phrase', '=', phrase).from('translations').del();
-    }
-
-    static getAllLanguages()  {
-        return languages;
+    static deletePhrase(phrase, language) {
+        return knexConnection.where({phrase: phrase, language}).from('translations').del();
     }
 
     static async getPhraseTranslations(phrase, language) {
         const data = await knexConnection.select().where({phrase: phrase, ...(language && {language})}).from('translations');
-        console.log('getPhraseTranslations', data)
         return data;
     }
 }

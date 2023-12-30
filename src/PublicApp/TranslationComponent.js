@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 
 export default function T({children}) {
     const [translated, setTranslated] = useState(children)
-    const userLocale = 'de';
 
     useEffect( () => {
             (async () => {
@@ -12,13 +11,13 @@ export default function T({children}) {
                 try {
                     response = await fetch('/translationsCache.json');
                     data = await response.json();
-                    translatedPhrase = data?.[children]?.[userLocale];
+                    translatedPhrase = data?.[children]?.en;
                 } catch (e) {}
 
-                if (!data?.[children]?.[userLocale]) {
+                if (!data?.[children]?.en) {
                     response = await fetch('http://localhost:8000/public/translate', {method: 'POST', body: JSON.stringify({phrase: children})});
                     data = await response.json();
-                    translatedPhrase = data?.[userLocale];
+                    translatedPhrase = data?.en;
                 }
 
                 setTranslated(translatedPhrase || children);

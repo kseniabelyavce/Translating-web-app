@@ -39,7 +39,7 @@ http.createServer(async (request, response) => {
             sendResponse(response,'OK');
             break;
         case "/admin/delete_phrase":
-            await TranslateLib.deletePhrase(phrase);
+            await TranslateLib.deletePhrase(phrase, language);
             sendResponse(response,'OK');
             break;
         default:
