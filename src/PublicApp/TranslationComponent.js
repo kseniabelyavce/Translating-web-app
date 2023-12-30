@@ -13,9 +13,7 @@ export default function T({children}) {
                     response = await fetch('/translationsCache.json');
                     data = await response.json();
                     translatedPhrase = data?.[children]?.[userLocale];
-                } catch (e) {
-
-                }
+                } catch (e) {}
 
                 if (!data?.[children]?.[userLocale]) {
                     response = await fetch('http://localhost:8000/public/translate', {method: 'POST', body: JSON.stringify({phrase: children})});

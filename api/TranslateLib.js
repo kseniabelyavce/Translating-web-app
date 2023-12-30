@@ -1,10 +1,15 @@
 import knexConnection from "./database.js";
 
-const languages = ['en', 'ru'];
+const languages = ['en', 'fr', 'de'];
 
 export default class TranslateLib {
-    static async getTranslation(phrase) {
-        let resultDB = await knexConnection.select().where('phrase', '=', phrase).from('translations');
+    static async getTranslation(phrase, locale) {
+        let resultDB = await knexConnection.select().where({phrase: phrase, language: 'en'}).from('translations');
+        if (resultDB && !resultDB.length) {
+            await this.createPhrase(phrase);
+            return;
+        }
+
         return resultDB.reduce((acc, curr) => {
             acc[curr.language] = curr.translation || curr.phrase;
             return acc;
@@ -25,20 +30,18 @@ export default class TranslateLib {
         }, {})
     }
 
-    static async createPhrase(phrase){
-        const result = await knexConnection.select().where('phrase', '=', phrase).from('translations');
+    static async createPhrase(phrase, locale){
+        const result = await knexConnection.select().where({phrase: phrase, language: 'en'}).from('translations');
         if (!result.length) {
-            await knexConnection.insert({phrase}).into('translations')
+            await knexConnection.insert({phrase, language: 'en', translation: phrase}).into('translations')
         }
     }
 
-    static async updatePhrase(phrase, langTranslations) {
-        Object.keys(langTranslations).map(async (language) => {
+    static async updatePhrase(phrase, language, translation) {
             await knexConnection
                 .from('translations')
                 .where({phrase, language})
-                .update({translation: langTranslations[language]})
-        });
+                .update({translation});
     }
 
     static deletePhrase(phrase) {
@@ -47,6 +50,12 @@ export default class TranslateLib {
 
     static getAllLanguages()  {
         return languages;
+    }
+
+    static async getPhraseTranslations(phrase, language) {
+        const data = await knexConnection.select().where({phrase: phrase, ...(language && {language})}).from('translations');
+        console.log('getPhraseTranslations', data)
+        return data;
     }
 }
 

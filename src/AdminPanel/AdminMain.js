@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import Menu from "../PublicApp/Menu.js";
-
+import {Table, Button} from 'react-bootstrap';
+import { Link } from "react-router-dom";
 
 export default function AdminMain() {
     const [translations, setTranslations] = useState([])
@@ -50,43 +51,31 @@ export default function AdminMain() {
         <div>
             <Menu/>
             { Object.keys(translations).length ? (
-
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Phrase</th>
-                        {languages.map(label => {
-                            return (
-                                <th>{label}</th>
-                            )
-                        })}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {translations.map(row => {
-                        return (
-                            <tr>
+                    <Table  bordered hover>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Phrase</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {translations.map((row, index) => {
+                           return (<tr>
+                                <td>{index + 1}</td>
                                 <td>{row.phrase}</td>
-                                {languages.map(locale => {
-                                    return (
-                                        <td>
-                                            <input id={row.phrase} defaultValue={row?.[locale]} onChange={(event) => {
-                                                if (!updatedPhrases[row.phrase]) {
-                                                    updatedPhrases[row.phrase] = {};
-                                                }
-                                                updatedPhrases[row.phrase][locale] = event.target.value;
-                                            }}
-                                            />
-                                        </td>)
-                                })}
-                                <td><button onClick={() => saveTranslation(row.phrase)}>Save</button></td>
-                                <td><button onClick={() => deleteTranslation(row.phrase)}>Delete</button></td>
+                               <td>
+                                   <Button variant="dark">
+                                       <Link style={{textDecoration: "none", color: "white"}} to="/admin/phrase-translations" state={{phrase: row.phrase}}>Translations</Link>
+                                   </Button>
+                               </td>
                             </tr>)
-                    })}
-                    </tbody>
-                </table>
+                        })}
 
-            ) : null}
-        </div>
-    )
+                        </tbody>
+                    </Table>
+                )
+                : null
+            }
+        </div>)
 }

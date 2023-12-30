@@ -1,13 +1,14 @@
 import T from "./TranslationComponent.js";
 import Menu from "./Menu.js";
+import {LanguageContext} from "./LanguageContext.js";
 
 export default function App () {
 
     return (
         <>
             <Menu/>
-            <div><T>In a bustling city, a young developer created a revolutionary web app that seamlessly connected people across the globe.
-                As users explored its features, the language barrier melted away, fostering a sense of unity in the digital realm.</T></div>
+            <div style={{position: "fixed", left: "40%", top: "43%", fontSize: "40px"}}>SIMPLE.</div>
+            <div style={{position: "fixed", left: "40%", top: "50%"}}><T>A sense of unity in the digital realm.</T></div>
         </>
     )
 }

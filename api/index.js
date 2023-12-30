@@ -11,10 +11,10 @@ http.createServer(async (request, response) => {
     }
 
     const body = await readFullBody(request);
+    const {phrase, translation, language} = body
     let result
     switch (request.url) {
         case "/public/translate":
-            const {phrase} = body
             result = await TranslateLib.getTranslation(phrase);
             sendResponse(response, result);
             break;
@@ -26,16 +26,20 @@ http.createServer(async (request, response) => {
             result = await TranslateLib.getAllLanguages();
             sendResponse(response, result);
             break;
+        case "/public/phrase_translations":
+            result = await TranslateLib.getPhraseTranslations(phrase, language);
+            sendResponse(response, result);
+            break;
         case "/admin/create_phrase":
-            await TranslateLib.createPhrase(body.phrase)
+            await TranslateLib.createPhrase(phrase)
             sendResponse(response,'OK');
             break;
         case "/admin/update_phrase":
-            await TranslateLib.updatePhrase(body.phrase, body.langTranslations)
+            await TranslateLib.updatePhrase(phrase, language, translation)
             sendResponse(response,'OK');
             break;
         case "/admin/delete_phrase":
-            await TranslateLib.deletePhrase(body.phrase);
+            await TranslateLib.deletePhrase(phrase);
             sendResponse(response,'OK');
             break;
         default:
