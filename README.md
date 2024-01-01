@@ -1,8 +1,5 @@
-# Make POST to translation service using terminal
-curl -X POST http://localhost:8000/translate -d '{"phrase": "Andrei Vorobei"}'
-curl -X POST http://localhost:8000/admin/create_phrase -d '{"phrase": "Ksu Belka"}'
-curl -X POST http://localhost:8000/admin/delete_phrase -d '{"phrase": "Ksu Belka"}'
-curl -X POST http://localhost:8000/admin/update_phrase -d '{"phrase": "Ksu Belka", "language": "2", "translation": "Ксю белка"}'
-curl -X GET http://localhost:8000/all_languages
-# DB user friendly editor 
-https://sqlitebrowser.org/dl/
+Translating-web-app is a simple way to start adding translation support for your web-app. 
+
+Technologies used: **React, Node.js, Knex.js, SQLite DB**
+
+More about the project you can find in [article](https://medium.com/p/1985b30ca7b6/edit)
