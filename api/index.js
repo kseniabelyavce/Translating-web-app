@@ -11,11 +11,12 @@ http.createServer(async (request, response) => {
     }
 
     const body = await readFullBody(request);
-    const {phrase, translation, language} = body
-    let result
+    const {phrase, translation, language} = body;
+    let result;
+
     switch (request.url) {
         case "/public/translate":
-            result = await TranslateLib.getTranslation(phrase);
+            result = await TranslateLib.getTranslation(phrase, language);
             sendResponse(response, result);
             break;
         case "/public/all_translations":
@@ -23,7 +24,7 @@ http.createServer(async (request, response) => {
             sendResponse(response, result);
             break;
         case "/public/all_languages":
-            result = await TranslateLib.getAllLanguages();
+            result = TranslateLib.getAllLanguages();
             sendResponse(response, result);
             break;
         case "/public/phrase_translations":
@@ -77,5 +78,4 @@ function readFullBody(request) {
 
             });
     });
-
 }

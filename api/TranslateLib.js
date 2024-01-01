@@ -3,8 +3,8 @@ import knexConnection from "./database.js";
 const languages = ['en', 'fr', 'de'];
 
 export default class TranslateLib {
-    static async getTranslation(phrase) {
-        let resultDB = await knexConnection.select().where({phrase: phrase, language: 'en'}).from('translations');
+    static async getTranslation(phrase, language = 'en') {
+        let resultDB = await knexConnection.select().where({phrase: phrase, language}).from('translations');
         if (resultDB && !resultDB.length) {
             await this.createPhrase(phrase);
             return;
